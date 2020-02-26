@@ -1,5 +1,5 @@
-#ifndef LOGGER
-#define LOGGER
+#ifndef LOGGER_H
+#define LOGGER_H
 
 
 typedef enum LogLevel {

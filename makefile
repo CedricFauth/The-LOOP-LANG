@@ -1,23 +1,25 @@
 CC = gcc
-CFLAGS = -Wall -pedantic -std=c99 -O01
+CFLAGS = -Wall -pedantic -std=c99 -O03
 
 all: clean1 loop clean2
 
-argparser.o: src/util/argparser.c src/util/argparser.h src/util/logger.h
+loop: logger.o loop.o argparser.o token.o lexer.o
+	$(CC) $(CFLAGS) -o loop loop.o logger.o argparser.o token.o lexer.o -lm
+
+argparser.o: src/util/argparser.c
 	$(CC) $(CFLAGS) -c src/util/argparser.c
 
-logger.o: src/util/logger.c src/util/logger.h
+logger.o: src/util/logger.c
 	$(CC) $(CFLAGS) -c src/util/logger.c
 
-token.o: src/token.c src/token.h
+token.o: src/token.c
 	$(CC) $(CFLAGS) -c src/token.c
 
 loop.o: src/loop.c
 	$(CC) $(CFLAGS) -c src/loop.c 
 
-loop: logger.o loop.o argparser.o token.o
-	$(CC) $(CFLAGS) -o loop loop.o logger.o argparser.o token.o
-
+lexer.o: src/lexer.c
+	$(CC) $(CFLAGS) -c src/lexer.c
 
 clean: clean1
 

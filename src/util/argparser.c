@@ -9,25 +9,25 @@ char** arguments;
 unsigned int input_count = 0;
 unsigned int input_length = 0;
 
-void argparse(int argc, char* argv[]){
+void argparse(int argc, char* argv[]) {
 
-    if(argc != 3){
+    if(argc != 3) {
         log_err("usage: loop FILE -in=VALUE1,...\n");
         exit(EX_USAGE);
     }
 
     arguments = argv;
 
-    if(memcmp("-in=", arguments[2], 4)){
+    if(memcmp("-in=", arguments[2], 4)) {
         log_err("no input defined: -in=VALUE,...\n");
         exit(EX_USAGE);
-    }  
+    }
 
     input_length = strlen(arguments[2]);
     input_count++;
-    for(int i = 4; i < input_length; i++){
+    for(int i = 4; i < input_length; i++) {
 
-        if(arguments[2][i] == ','){
+        if(arguments[2][i] == ',') {
             arguments[2][i] = '\0';
             input_count++;
         }
@@ -38,10 +38,10 @@ char* get_filename() {
     return arguments[1];
 }
 
-unsigned int get_input_value(int index){
+u_int32_t get_input_value(int index) {
     int c = 0;
-    for(int i = 4; i < input_length; i++){
-        if(c == index){
+    for(int i = 4; i < input_length; i++) {
+        if(c == index) {
             return atoi(arguments[2]+i);
         }
         if(arguments[2][i] == '\0') c++;
@@ -49,6 +49,6 @@ unsigned int get_input_value(int index){
     return 0;
 }
 
-unsigned int get_input_count(){
+unsigned int get_input_count() {
     return input_count;
 }

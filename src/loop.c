@@ -3,28 +3,21 @@
 #include "token.h"
 #include "util/logger.h"
 #include "util/argparser.h"
+#include "lexer.h"
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
 
-    argparse(argc, argv);
+    token_list_t *token_list = open_lexer(argc, argv);
 
-    printf("filename: %s\n", get_filename());
+    while(next_statement(token_list)){
 
-    int inp_len = get_input_count();
-    for(int i = 0; i < inp_len; i++){
-        printf("x%d := %u\n", i+1, get_input_value(i));
+        print_token_list(token_list);
+
     }
 
-    token_list_t *list = new_token_list();
-
-    token_append(list, VARNAME, 20000, 'A', 123);
-
-    token_node_t *t = get_token(list, 0);
-
-    printf("%c%u\n", t->value.name[0], t->value.name[1]);
-
-    free_token_list(list);
-
+    print_token_list(token_list);
+    
+    close_lexer(token_list);
 
     return 0;
 
