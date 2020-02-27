@@ -6,8 +6,8 @@ all: clean1 loop clean2
 loop: logger.o loop.o argparser.o token.o lexer.o
 	$(CC) $(CFLAGS) -o loop loop.o logger.o argparser.o token.o lexer.o -lm
 
-argparser.o: src/util/argparser.c
-	$(CC) $(CFLAGS) -c src/util/argparser.c
+argparser.o: src/argparser.c
+	$(CC) $(CFLAGS) -c src/argparser.c
 
 logger.o: src/util/logger.c
 	$(CC) $(CFLAGS) -c src/util/logger.c

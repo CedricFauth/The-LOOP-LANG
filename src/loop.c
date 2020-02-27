@@ -2,7 +2,7 @@
 
 #include "token.h"
 #include "util/logger.h"
-#include "util/argparser.h"
+#include "argparser.h"
 #include "lexer.h"
 
 int main(int argc, char* argv[]) {

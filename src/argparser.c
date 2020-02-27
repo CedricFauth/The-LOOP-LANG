@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sysexits.h>
 
-#include "logger.h"
+#include "util/logger.h"
 
 char** arguments;
 unsigned int input_count = 0;

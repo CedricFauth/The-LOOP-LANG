@@ -6,7 +6,7 @@
 
 #include "token.h"
 #include "util/logger.h"
-#include "util/argparser.h"
+#include "argparser.h"
 
 static unsigned int inputs_read = 0;
 static unsigned int inputs_count = 0;
