@@ -79,7 +79,7 @@ void print_token_list(token_list_t *list) {
         return;
     }
 
-    printf("Tokenlist:\n{\n");
+    printf("{\n");
     if(list->head != NULL){
         for(token_node_t *node = list->head; node != NULL; node = node->next){
             printf("\t");
@@ -107,7 +107,7 @@ void print_token_list(token_list_t *list) {
                 printf("[NUMBER -> %u] ", node->value.number);
                 break;
             case VARNAME:
-                printf("[VARNAME -> %s] ", node->value.name);
+                printf("[VAR -> %s] ", node->value.name);
                 break;
             case SEMICOLON:
                 printf("[SEMICOLON] " );

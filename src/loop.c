@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
     token_list_t *token_list = open_lexer(argc, argv);
 
     while(next_statement(token_list)){
-        printf("Getting token:\n");
+        log_info("Getting statement tokens:\n");
         print_token_list(token_list);
 
     }
