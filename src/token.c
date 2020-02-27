@@ -74,17 +74,16 @@ void add_custom_token(token_list_t *list, token_t type) {
 
 void print_token_list(token_list_t *list) {
 
-    if(list == NULL){
+    if(list == NULL) {
         log_err("Null instead of list.");
         return;
     }
 
     printf("{\n");
-    if(list->head != NULL){
-        for(token_node_t *node = list->head; node != NULL; node = node->next){
+    if(list->head != NULL) {
+        for(token_node_t *node = list->head; node != NULL; node = node->next) {
             printf("\t");
-            switch (node->type)
-            {
+            switch (node->type) {
             case LOOP:
                 printf("[LOOP] ");
                 break;
@@ -138,7 +137,7 @@ void clear_token_list(token_list_t *list) {
 }
 
 void free_token_list(token_list_t *list) {
-    
+
     clear_token_list(list);
 
     free(list);

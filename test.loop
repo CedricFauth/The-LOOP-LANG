@@ -1,9 +1,10 @@
+A0 := A42 + 2;
 LOOP X1 DO
-  X0 := X0 + 0;
-  LOOP X2 DO
-    X0 := X0 + 1
-  END
+    X0 := X0 + 0;
+    LOOP X2 DO
+        X0 := X0 + 1
+    END
 END;
 LOOP X5 DO 
-    X2 := 3;
+    X2 := 3
 END
