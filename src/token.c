@@ -17,7 +17,7 @@ token_node_t *new_token(token_t type, u_int32_t value, char *name, int len) {
 
     if(type == VARNAME) {
         if(len > 3) {
-            log_warn("Token name too long\n");
+            log_warn("Variable name too long\n");
             len = 3;
         }
         memcpy(token->value.name, name, len);
