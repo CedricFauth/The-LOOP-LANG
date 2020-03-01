@@ -24,14 +24,3 @@ void log_err(char* msg) {
     if(LEVEL <= ERROR) printf("%s[ERROR] %s%s%s%s",RED, RESET, BOLD, msg, RESET);
 }
 
-void log_err_detail(char* msg, char* detail, int pos) {
-
-    if(LEVEL <= ERROR) {
-        log_err(msg);
-        for(int i = 0; i < pos + 8; i++) {
-            printf(" ");
-        }
-        printf("%s^---%s%s\n", RED, detail, RESET);
-    }
-
-}

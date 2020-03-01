@@ -5,6 +5,6 @@ LOOP X1 DO
         X0 := X0 + 1
     END
 END;
-LOOP X5 DO 
+LOOP X5 DO
     X2 := 3
 END

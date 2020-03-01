@@ -8,12 +8,28 @@
 #include "util/logger.h"
 #include "argparser.h"
 
-static unsigned int inputs_read = 0;
+#define BOLD "\033[1m"
+#define ORANGE "\033[33m\033[1m"
+#define RED "\033[31m\033[1m"
+#define RESET "\033[0m"
+
 static unsigned int inputs_count = 0;
 static unsigned int current_char = 0;
+static unsigned int line = 1;
 static int statements = 0;
 static FILE *fd;
 static char *content;
+
+void lex_error(){
+
+    char *i = content + current_char;
+    while(*i != '\0' && *i != '\n'){
+        i++;
+        
+    }
+    (*i) = '\0';
+    printf("%s[ERROR] %s%sline %d, unknown or not allowed character: %s%s\n", RED, RESET, BOLD, line, content+current_char, RESET);
+}
 
 void readfile() {
 
@@ -89,7 +105,7 @@ void number(token_list_t *list) {
 
 }
 
-void word(token_list_t *list) {
+int word(token_list_t *list) {
 
     if(is_digit(peek(1))) {
         //var name
@@ -119,29 +135,24 @@ void word(token_list_t *list) {
                 statements--;
             }
             break;
+        default:
+            return 0;
         }
     }
+    return 1;
 }
 
-int next_statement(token_list_t *list) {
+int get_tokens(token_list_t *list) {
 
-    int counter = 0;
-
-    clear_token_list(list);
-
-    if(inputs_count > inputs_read) {
+    for(int i = 0; i < inputs_count; i++) {
 
         char var[4];
-        snprintf(var, 4, "X%d", inputs_read + 1);
-        int len = (inputs_read == 0 ? 0 : (int)log10(inputs_read));
+        snprintf(var, 4, "X%d", i + 1);
+        int len = (i == 0 ? 0 : (int)log10(i));
         add_name_token(list, var, len+2);
         add_custom_token(list, ASSIGN);
-        add_value_token(list, get_input_value(inputs_read));
+        add_value_token(list, get_input_value(i));
         add_custom_token(list, SEMICOLON);
-
-        inputs_read++;
-
-        return 1;
 
     }
 
@@ -152,43 +163,53 @@ int next_statement(token_list_t *list) {
 
         if(is_digit(c)) {
             number(list);
-            counter++;
         } else if(is_char(c)) {
-            word(list);
-            counter++;
+            if(!word(list)){
+                lex_error();
+                return 1;
+            }
         } else {
             switch (c) {
+            case '\n':
+            line++;
             case ' ':
+            case '\r':
+            case '\t':
                 break;
             case '+':
                 add_custom_token(list, PLUS);
-                counter++;
                 break;
             case '-':
                 add_custom_token(list, MINUS);
-                counter++;
                 break;
             case ';':
                 add_custom_token(list, SEMICOLON);
-                counter++;
-                if(statements == 0) {
-                    end = true;
-                }
                 break;
             case ':':
-                if(next() == '=')
+                if(next() == '='){
                     add_custom_token(list, ASSIGN);
-                counter++;
+                }else{
+                    lex_error();
+                    return 1;
+                }
                 break;
             case '\0':
-                return counter;
+                if(statements != 0) {
+                    log_err("not all opened statements are closed.\n");
+                    return 1;
+                }
+                end = true;
+                break;
+            default:
+                lex_error();
+                return 1;
             }
 
         }
         next();
 
     }
-    return 1;
+    return 0;
 }
 
 void close_lexer(token_list_t *list) {
