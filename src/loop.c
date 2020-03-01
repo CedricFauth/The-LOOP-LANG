@@ -7,30 +7,43 @@
 #include "lexer.h"
 #include "parser.h"
 
+#define DEBUG
+//#undef DEBUG
+
 int main(int argc, char* argv[]) {
 
+    #ifdef DEBUG
+    set_log_level(INFO);
+    #else
+    set_log_level(WARNING);
+    #endif
+
     token_list_t *token_list = open_lexer(argc, argv);
-    //parse_node_t *parse_nodes = open_parser();
-
-    /*while(next_statement(token_list)) {
-        log_info("Getting statement tokens:\n");
-        print_token_list(token_list);
-
-        log_info("Generating AST:\n");
-        parse(token_list);
-
-        clear_parser(parse_nodes);
-        clear_token_list(token_list);
-    }*/
-
-    log_info("Getting statement tokens:\n");
+    
+    log_info("getting statement tokens\n");
     if(get_tokens(token_list) != 0){
         close_lexer(token_list);
         exit(EXIT_FAILURE);
     }
-    print_token_list(token_list);
 
+    #ifdef DEBUG
+    print_token_list(token_list);
+    #endif
+
+    log_info("generating AST\n");
+    program_array_t *ast = NULL;
+    if((ast = parse(token_list)) == NULL){
+        close_lexer(token_list);
+        close_parser(ast);
+        exit(EXIT_FAILURE);
+    }
+
+    #ifdef DEBUG
+    print_ast(ast);
+    #endif
+    
     close_lexer(token_list);
+    close_parser(ast);
 
     exit(EXIT_SUCCESS);
 

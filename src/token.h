@@ -15,14 +15,13 @@ typedef enum token_t {
     NUMBER, VARNAME,
 
     // other tokens
-    SEMICOLON
+    SEMICOLON, ENDOFFILE
 
 } token_t;
 
 typedef struct token_node_t {
 
     token_t type;
-
     struct token_node_t* next;
 
     union {
@@ -48,7 +47,6 @@ void add_custom_token(token_list_t *list, token_t type);
 
 token_list_t* new_token_list();
 void free_token_list(token_list_t *list);
-void clear_token_list(token_list_t *list);
 int size(token_list_t *list);
 token_node_t *get_token(token_list_t *list, int index);
 void print_token_list(token_list_t *list);

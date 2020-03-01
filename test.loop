@@ -1,4 +1,4 @@
-A0 := A42 + 2;
+A0 := V3 + 2;
 LOOP X1 DO
     X0 := X0 + 0;
     LOOP X2 DO

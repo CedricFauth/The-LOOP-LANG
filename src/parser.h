@@ -2,25 +2,23 @@
 #define EXPRESSION_H
 
 #include "token.h"
-#include "token.h"
 
 typedef struct parse_node_t parse_node_t;
 
 typedef enum parse_t {
-    ST_PROG,
     ST_LOOP,
     ST_ASSIGN,
     EX_BINARY,
-    EX_PRIMARY,
-    EX_VARIABLE
+    EX_PRIMARY
 } parse_t;
 
-typedef struct st_prog_t {
+typedef struct program_array_t {
 
-    parse_node_t *current;
-    parse_node_t *next;
+    parse_node_t **nodes;
+    unsigned int size;
+    unsigned int pos;
 
-} st_prog_t;
+} program_array_t;
 
 typedef struct st_loop_t {
 
@@ -43,17 +41,16 @@ typedef struct ex_bin_t {
     parse_node_t *right;
 } ex_bin_t;
 
-typedef struct ex_var_t {
-
-    char name[4];
-
-} ex_var_t;
-
 typedef struct ex_primary_t {
 
-    u_int32_t value;
+    token_t type;
+    
+    union{
+        char var[4];
+        u_int32_t number;
+    } value;
 
-} ex_primary_t;
+} ex_number_t;
 
 
 struct parse_node_t {
@@ -63,25 +60,19 @@ struct parse_node_t {
     union
     {
         // statements
-        st_prog_t st_prog;
         st_loop_t st_loop;
         st_assign_t st_assign;
         // expressions
         ex_bin_t ex_bin;
-        ex_var_t ex_var;
-        ex_primary_t ex_primary;
+        ex_number_t ex_primary;
     } value;
 
 };
 
-void print_ast(parse_node_t *node);
-void free_ast(parse_node_t *node);
+void print_ast(program_array_t *prog);
 
-parse_node_t *open_parser();
-void close_parser(parse_node_t *node);
+program_array_t *parse(token_list_t *list);
+void close_parser(program_array_t *prog);
 
-void clear_parser(parse_node_t *node);
-
-void parse(token_list_t *list);
 
 #endif

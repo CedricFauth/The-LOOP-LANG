@@ -113,6 +113,10 @@ int word(token_list_t *list) {
         char var[4];
         var[0] = current();
         while(is_digit(peek(1))) {
+            if(n > 2){
+                current_char -=2;
+                return 1;
+            }
             var[n++] = next();
         }
         add_name_token(list, var, n);
@@ -136,10 +140,10 @@ int word(token_list_t *list) {
             }
             break;
         default:
-            return 0;
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 int get_tokens(token_list_t *list) {
@@ -164,7 +168,7 @@ int get_tokens(token_list_t *list) {
         if(is_digit(c)) {
             number(list);
         } else if(is_char(c)) {
-            if(!word(list)){
+            if(word(list) != 0){
                 lex_error();
                 return 1;
             }
@@ -198,6 +202,7 @@ int get_tokens(token_list_t *list) {
                     log_err("not all opened statements are closed.\n");
                     return 1;
                 }
+                add_custom_token(list, ENDOFFILE);
                 end = true;
                 break;
             default:

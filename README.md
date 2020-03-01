@@ -18,5 +18,5 @@ add     -> primary ( ("+"|"-") primary )* ;
 primary -> var | number ;
 
 var     -> {A,...,Z} x {0,...,99} ;
-primary -> {0,...} ;
+number -> {0,...} ;
 

@@ -111,6 +111,9 @@ void print_token_list(token_list_t *list) {
             case SEMICOLON:
                 printf("[SEMICOLON] " );
                 break;
+            case ENDOFFILE:
+                printf("[EOF] " );
+                break;
             default:
                 printf("\033[31m[UNDEFINED -> %d] \033[0m", node->type);
                 break;
