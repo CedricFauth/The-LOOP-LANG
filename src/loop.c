@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG
     set_log_level(INFO);
 #else
-    set_log_level(WARNING);
+    set_log_level(ERROR);
 #endif
 
     token_list_t *token_list = open_lexer(argc, argv);
