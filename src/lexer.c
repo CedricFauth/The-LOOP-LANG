@@ -20,6 +20,18 @@ static int statements = 0;
 static FILE *fd;
 static char *content;
 
+void add_name_token(token_list_t *list, char *name, int len) {
+    token_list_append(list, VARNAME, 0, name, len, line);
+}
+
+void add_value_token(token_list_t *list, u_int32_t value) {
+    token_list_append(list, NUMBER, value, 0, 0, line);
+}
+
+void add_custom_token(token_list_t *list, token_t type) {
+    token_list_append(list, type, 0, 0, 0, line);
+}
+
 void lex_error(){
 
     char *i = content + current_char;

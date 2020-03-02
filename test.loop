@@ -1,11 +1,13 @@
 A0 := V3 + 2;
 LOOP X1 DO
     X0 := X0 + 0;
-    LOOP X2 DO
+    LOOP 2 DO
         X0 := X0 + 1;
         X1 := 1
     END;
-    X1 := 1
+    X1 := 1;
+    X0 := 1+2+3;
+    X3 := 125
 END;
 LOOP X5 DO
     X2 := 3

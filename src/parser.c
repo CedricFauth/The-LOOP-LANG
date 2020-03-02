@@ -5,15 +5,22 @@
 #include "util/logger.h"
 #include "parser.h"
 
-typedef struct error_t {
-    bool error;
-    int line;
-    //TODO
+#define BOLD "\033[1m"
+#define ORANGE "\033[33m\033[1m"
+#define RED "\033[31m\033[1m"
+#define RESET "\033[0m"
 
-} error_t;
-
-static error_t err;
 static token_list_t *tokens;
+static int statements;
+static unsigned int position;
+static bool error;
+
+void parser_error(char *msg){
+
+    printf("%s[ERROR] %s%sline %u, %s%s", RED, RESET, BOLD, 
+            get_token(tokens, position)->line, msg, RESET);
+    error = true;
+}
 
 program_array_t *create_program(){
 
@@ -45,15 +52,16 @@ parse_node_t *program_get(program_array_t *prog, unsigned int i){
     return NULL;
 }
 
-void program_close(program_array_t *prog);
+void close_parser(program_array_t *prog);
 
 void free_parse_node(parse_node_t *node){
+    if(!node) return;
 
     switch (node->type)
     {
     case ST_LOOP:
         free_parse_node(node->value.st_loop.expr);
-        program_close(node->value.st_loop.programs);
+        close_parser(node->value.st_loop.programs);
         break;
     case ST_ASSIGN:
         free_parse_node(node->value.st_assign.expr);
@@ -70,34 +78,28 @@ void free_parse_node(parse_node_t *node){
 
 }
 
-void program_close(program_array_t *prog){
-    if (prog == NULL){
-        return;
-    }
-
-    for(int i = 0; i < prog->pos; i++){
-        free_parse_node(prog->nodes[i]);
-    }
-    free(prog->nodes);
-    free(prog);
-
-}
 
 token_t consume(){
+    return get_token(tokens, position++)->type;
+    /*
     token_node_t *tmp = tokens->head->next;
     token_t tok = tokens->head->type;
     free(tokens->head);
     tokens->head = tmp;
-    return tok;
+    return tok;*/
 }
 
 bool match(token_t type){
-
+    if(get_token(tokens, position)->type == type){
+        return true;
+    }
+    return false;
+    /*
     if(tokens->head == NULL)
         return false;
     if(tokens->head->type == type)
         return true;
-    return false;
+    return false;*/
 }
 
 parse_node_t *new_parse_node(parse_t type){
@@ -113,18 +115,18 @@ parse_node_t *primary(){
     if(match(NUMBER)){
         parse_node_t* num = new_parse_node(EX_PRIMARY);
         num->value.ex_primary.type = NUMBER;
-        num->value.ex_primary.value.number = tokens->head->value.number;
+        num->value.ex_primary.value.number = get_token(tokens, position)->value.number;//tokens->head->value.number;
         consume();
         return num;
     }else if(match(VARNAME)){
         parse_node_t* num = new_parse_node(EX_PRIMARY);
         num->value.ex_primary.type = VARNAME;
-        strncpy(num->value.ex_primary.value.var, (char*) tokens->head->value.name, 4);
+        strncpy(num->value.ex_primary.value.var, (char*) get_token(tokens, position)->value.name, 4);
         consume();
         return num;
     }
     
-    log_err("illegal primary expression\n");
+    parser_error("illegal primary expression\n");
     return NULL;
 }
 
@@ -165,14 +167,14 @@ parse_node_t *assign(){
     char buff[4];
 
     log_info("VAR detected\n");
-    strncpy(buff, (char*) tokens->head->value.name, 4);
+    strncpy(buff, (char*) get_token(tokens, position)->value.name, 4);
     consume();
 
     if(match(ASSIGN)){
         log_info("ASSIGN detected\n");
         consume();
     }else{
-        log_err("no ':=' detected\n");
+        parser_error("no ':=' detected\n");
         return NULL;
     }
 
@@ -195,7 +197,7 @@ parse_node_t *loop(){
         consume();
     }else{
         free_parse_node(expr);
-        log_err("missing 'DO' in LOOP ... DO\n");
+        parser_error("missing 'DO' in LOOP ... DO\n");
         return NULL;
     }
 
@@ -220,13 +222,16 @@ parse_node_t *statement(){
         return loop();
     }
 
-    log_err("not a valid statement after ';'\n");
-    print_token_list(tokens);
+    parser_error("not a valid statement after ';'\n");
+    //print_token_list(tokens);
     return NULL;
 }
 
 program_array_t *parse(token_list_t *list){
-    err.error = false;
+    error = false;
+    statements = 0;
+    position = 0;
+
     if(!list) return NULL;
     tokens = list;
 
@@ -238,14 +243,18 @@ program_array_t *parse(token_list_t *list){
         program_add(prog_arr, statement());
     }
 
+    if(error){
+        close_parser(prog_arr);
+        return NULL;
+    }
+
     if(!match(ENDOFFILE)){
-        log_err("expected ';' before next statement\n");
+        parser_error("expected ';' before next statement\n");
         return NULL;
     }
 
     consume();
-    
-    print_token_list(tokens);
+    //print_token_list(tokens);
     return prog_arr;
 }
 
@@ -254,10 +263,13 @@ void print_ast_rec(parse_node_t *node);
 void print_loop(program_array_t *prog){
     
     for(int i = 0; i < prog->pos; i++){
-        printf("\n\t");
-        print_ast_rec(program_get(prog, i));
+        parse_node_t *tmp = prog->nodes[i];
+        if(!tmp) continue;
+        printf("\n");
+        for(int j = 0; j < statements; j++)
+            printf("\t");
+        print_ast_rec(tmp);
     }
-    printf("\n");
 }
 
 void print_ast_rec(parse_node_t *node){
@@ -272,14 +284,16 @@ void print_ast_rec(parse_node_t *node){
     switch (node->type)
     {
     case ST_ASSIGN:
-        printf("ASSIGN: %s", node->value.st_assign.name);
+        printf("ASSIGN %s ", node->value.st_assign.name);
         print_ast_rec(node->value.st_assign.expr);
         break;
     case ST_LOOP:
+        statements++;
         printf("LOOP ");
         print_ast_rec(node->value.st_loop.expr);
         printf(" DO ");
         print_loop(node->value.st_loop.programs);
+        statements--;
         break;
     case EX_BINARY:
         print_ast_rec(node->value.ex_bin.left);
@@ -317,14 +331,24 @@ void print_ast_rec(parse_node_t *node){
 
 void print_ast(program_array_t *prog){
     for(int i = 0; i < prog->pos; i++){
-        printf("Statement %d:\n", i);
-        print_ast_rec(program_get(prog, i));
+        parse_node_t *tmp = program_get(prog, i);
+        if(!tmp) continue;
+        print_ast_rec(tmp);
         printf("\n");
     }
 }
 
 void close_parser(program_array_t *prog){
-    program_close(prog);
+    if(!prog) return;
+
+    for(int i = 0; i < prog->pos; i++){
+        parse_node_t *tmp = prog->nodes[i];
+        if(!tmp) continue;
+        free_parse_node(tmp);
+    }
+    free(prog->nodes);
+    free(prog);
+    
     return;
 }
 

@@ -22,6 +22,7 @@ typedef enum token_t {
 typedef struct token_node_t {
 
     token_t type;
+    unsigned int line;
     struct token_node_t* next;
 
     union {
@@ -41,10 +42,8 @@ typedef struct token_list_t {
 } token_list_t;
 
 
-void add_name_token(token_list_t *list, char *name, int len);
-void add_value_token(token_list_t *list, u_int32_t value);
-void add_custom_token(token_list_t *list, token_t type);
-
+void token_list_append(token_list_t *list, token_t type, u_int32_t value, 
+                        char *name, int len, unsigned int line);
 token_list_t* new_token_list();
 void free_token_list(token_list_t *list);
 int size(token_list_t *list);

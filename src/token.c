@@ -4,7 +4,7 @@
 #include "util/logger.h"
 #include "token.h"
 
-token_node_t *new_token(token_t type, u_int32_t value, char *name, int len) {
+token_node_t *new_token(token_t type, u_int32_t value, char *name, int len, unsigned int line) {
 
     token_node_t *token = malloc(sizeof(token_node_t));
     if(token == NULL) {
@@ -13,6 +13,7 @@ token_node_t *new_token(token_t type, u_int32_t value, char *name, int len) {
     }
 
     token->type = type;
+    token->line = line;
     token->next = NULL;
 
     if(type == VARNAME) {
@@ -41,14 +42,14 @@ token_list_t* new_token_list() {
     return list;
 }
 
-void token_list_append(token_list_t *list, token_t type, u_int32_t value, char *name, int len) {
+void token_list_append(token_list_t *list, token_t type, u_int32_t value, char *name, int len, unsigned int line) {
 
     if(!list) {
         log_err("List is NULL\n");
         return;
     }
 
-    token_node_t *token = new_token(type, value, name, len);
+    token_node_t *token = new_token(type, value, name, len, line);
     if(token == NULL) return;
 
     if(list->head == NULL) {
@@ -58,18 +59,6 @@ void token_list_append(token_list_t *list, token_t type, u_int32_t value, char *
         list->tail->next = token;
         list->tail = token;
     }
-}
-
-void add_name_token(token_list_t *list, char *name, int len) {
-    token_list_append(list, VARNAME, 0, name, len);
-}
-
-void add_value_token(token_list_t *list, u_int32_t value) {
-    token_list_append(list, NUMBER, value, 0, 0);
-}
-
-void add_custom_token(token_list_t *list, token_t type) {
-    token_list_append(list, type, 0, 0, 0);
 }
 
 void print_token_list(token_list_t *list) {
@@ -82,7 +71,7 @@ void print_token_list(token_list_t *list) {
     printf("{\n");
     if(list->head != NULL) {
         for(token_node_t *node = list->head; node != NULL; node = node->next) {
-            printf("\t");
+            printf("l=%u\t", node->line);
             switch (node->type) {
             case LOOP:
                 printf("[LOOP] ");
