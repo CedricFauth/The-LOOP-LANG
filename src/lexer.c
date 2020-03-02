@@ -32,12 +32,12 @@ void add_custom_token(token_list_t *list, token_t type) {
     token_list_append(list, type, 0, 0, 0, line);
 }
 
-void lex_error(){
+void lex_error() {
 
     char *i = content + current_char;
-    while(*i != '\0' && *i != '\n'){
+    while(*i != '\0' && *i != '\n') {
         i++;
-        
+
     }
     (*i) = '\0';
     printf("%s[ERROR] %s%sline %d, unknown or not allowed character: %s%s\n", RED, RESET, BOLD, line, content+current_char, RESET);
@@ -125,7 +125,7 @@ int word(token_list_t *list) {
         char var[4];
         var[0] = current();
         while(is_digit(peek(1))) {
-            if(n > 2){
+            if(n > 2) {
                 current_char -=2;
                 return 1;
             }
@@ -180,14 +180,14 @@ int get_tokens(token_list_t *list) {
         if(is_digit(c)) {
             number(list);
         } else if(is_char(c)) {
-            if(word(list) != 0){
+            if(word(list) != 0) {
                 lex_error();
                 return 1;
             }
         } else {
             switch (c) {
             case '\n':
-            line++;
+                line++;
             case ' ':
             case '\r':
             case '\t':
@@ -202,9 +202,9 @@ int get_tokens(token_list_t *list) {
                 add_custom_token(list, SEMICOLON);
                 break;
             case ':':
-                if(next() == '='){
+                if(next() == '=') {
                     add_custom_token(list, ASSIGN);
-                }else{
+                } else {
                     lex_error();
                     return 1;
                 }

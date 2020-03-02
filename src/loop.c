@@ -12,37 +12,37 @@
 
 int main(int argc, char* argv[]) {
 
-    #ifdef DEBUG
+#ifdef DEBUG
     set_log_level(INFO);
-    #else
+#else
     set_log_level(WARNING);
-    #endif
+#endif
 
     token_list_t *token_list = open_lexer(argc, argv);
-    
+
     log_info("getting statement tokens\n");
-    if(get_tokens(token_list) != 0){
+    if(get_tokens(token_list) != 0) {
         close_lexer(token_list);
         exit(EXIT_FAILURE);
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     print_token_list(token_list);
-    #endif
+#endif
 
     log_info("generating AST\n");
     program_array_t *ast = NULL;
-    if((ast = parse(token_list)) == NULL){
+    if((ast = parse(token_list)) == NULL) {
         close_lexer(token_list);
         close_parser(ast);
         exit(EXIT_FAILURE);
     }
 
     log_info("printing ast...\n");
-    #ifdef DEBUG
+#ifdef DEBUG
     print_ast(ast);
-    #endif
-    
+#endif
+
     close_lexer(token_list);
     close_parser(ast);
 
