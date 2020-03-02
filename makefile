@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -pedantic -std=c99 -O03
+CFLAGS = -Wall -pedantic -std=c99 #-O03
 
 all: clean1 loop clean2
 

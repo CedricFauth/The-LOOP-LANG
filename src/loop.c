@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
         close_parser(ast);
         exit(EXIT_FAILURE);
     }
-
+    printf("printing ast...\n");
     #ifdef DEBUG
     print_ast(ast);
     #endif

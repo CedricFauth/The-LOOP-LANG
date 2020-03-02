@@ -23,8 +23,9 @@ typedef struct program_array_t {
 typedef struct st_loop_t {
 
     //var
-    char name[4];
-    //statmnt
+    parse_node_t *expr;
+    //statements
+    program_array_t *programs;
 
 } st_loop_t;
 

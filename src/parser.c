@@ -28,7 +28,10 @@ void program_add(program_array_t *prog, parse_node_t *node){
     if(prog->pos >= prog->size){
         log_warn("resizing program array\n");
         prog->size *=2;
-        realloc(prog->nodes, prog->size*sizeof(parse_node_t*));
+        prog->nodes = realloc(prog->nodes, prog->size*sizeof(parse_node_t*));
+        if(!prog->nodes){
+            log_err("resizing program array failed\n");
+        }
     }
     prog->nodes[prog->pos++] = node;
 }
@@ -40,6 +43,38 @@ parse_node_t *program_get(program_array_t *prog, unsigned int i){
     }
     log_err("program_get failed: i too large");
     return NULL;
+}
+
+void free_parse_node(parse_node_t *node){
+
+    switch (node->type)
+    {
+    case ST_ASSIGN:
+        free_parse_node(node->value.st_assign.expr);
+        break;
+    case EX_BINARY:
+        free_parse_node(node->value.ex_bin.left);
+        free_parse_node(node->value.ex_bin.right);
+        break;
+    default:
+        break;
+    }
+
+    free(node);
+
+}
+
+void program_close(program_array_t *prog){
+    if (prog == NULL){
+        return;
+    }
+
+    for(int i = 0; i < prog->pos; i++){
+        free_parse_node(prog->nodes[i]);
+    }
+    free(prog->nodes);
+    free(prog);
+
 }
 
 token_t consume(){
@@ -118,18 +153,15 @@ parse_node_t *expression(){
 }
 
 parse_node_t *assign(){
+
     log_info("entering assign\n");
 
     char buff[4];
 
-    if(match(VARNAME)){
-        log_info("VAR detected\n");
-        strncpy(buff, (char*) tokens->head->value.name, 4);
-        consume();
-    }else{
-        log_err("no variable detected\n");
-        return NULL;
-    }
+    log_info("VAR detected\n");
+    strncpy(buff, (char*) tokens->head->value.name, 4);
+    consume();
+
     if(match(ASSIGN)){
         log_info("ASSIGN detected\n");
         consume();
@@ -145,23 +177,52 @@ parse_node_t *assign(){
     return asgn;
 }
 
+parse_node_t *statement();
+
+parse_node_t *loop(){
+
+    log_info("LOOP detected\n");
+    consume();
+    parse_node_t *expr = expression();
+    if(match(DO)){
+        log_info("DO detected\n");
+        consume();
+    }else{
+        free_parse_node(expr);
+        log_err("missing 'DO' in LOOP ... DO\n");
+        return NULL;
+    }
+
+    program_array_t *statements = create_program();
+    program_add(statements, statement());
+    while(!match(END) && match(SEMICOLON)){
+        consume();
+        program_add(statements, statement());
+    }
+    consume();
+    parse_node_t *loop_st = new_parse_node(ST_LOOP);
+    loop_st->value.st_loop.expr = expr;
+    loop_st->value.st_loop.programs = statements;
+    return loop_st;
+    
+}
+
 parse_node_t *statement(){
-    return assign();
+    if(match(VARNAME)){
+        return assign();
+    }else if(match(LOOP)){
+        return loop();
+    }
+
+    log_err("not a valid statement after ';'\n");
+    print_token_list(tokens);
+    return NULL;
 }
 
 program_array_t *parse(token_list_t *list){
     err.error = false;
     if(!list) return NULL;
     tokens = list;
-
-    /*parse_node_t *node = statement();
-    while(match(SEMICOLON)){
-        consume();
-        parse_node_t *tmp = node;
-        node = new_parse_node(ST_PROG);
-        node->value.st_prog.current = statement();
-        node->value.st_prog.next = tmp;
-    }*/
 
     program_array_t *prog_arr = create_program();
     program_add(prog_arr, statement());
@@ -170,9 +231,27 @@ program_array_t *parse(token_list_t *list){
         consume();
         program_add(prog_arr, statement());
     }
+
+    if(!match(ENDOFFILE)){
+        log_err("expected ';' before next statement\n");
+        return NULL;
+    }
+
+    consume();
     
     print_token_list(tokens);
     return prog_arr;
+}
+
+void print_ast_rec(parse_node_t *node);
+
+void print_loop(program_array_t *prog){
+    
+    for(int i = 0; i < prog->pos; i++){
+        printf("\n\t");
+        print_ast_rec(program_get(prog, i));
+    }
+    printf("\n");
 }
 
 void print_ast_rec(parse_node_t *node){
@@ -189,6 +268,12 @@ void print_ast_rec(parse_node_t *node){
     case ST_ASSIGN:
         printf("ASSIGN: %s", node->value.st_assign.name);
         print_ast_rec(node->value.st_assign.expr);
+        break;
+    case ST_LOOP:
+        printf("LOOP ");
+        print_ast_rec(node->value.st_loop.expr);
+        printf(" DO ");
+        print_loop(node->value.st_loop.programs);
         break;
     case EX_BINARY:
         print_ast_rec(node->value.ex_bin.left);
@@ -232,17 +317,8 @@ void print_ast(program_array_t *prog){
     }
 }
 
-void free_ast(program_array_t *prog){
-    if (prog == NULL){
-        return;
-    }
-
-    // TODO
-    //for(int i = 0; i < prog->pos)
-
-}
-
 void close_parser(program_array_t *prog){
+    program_close(prog);
     return;
 }
 
