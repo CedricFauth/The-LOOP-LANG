@@ -45,10 +45,16 @@ parse_node_t *program_get(program_array_t *prog, unsigned int i){
     return NULL;
 }
 
+void program_close(program_array_t *prog);
+
 void free_parse_node(parse_node_t *node){
 
     switch (node->type)
     {
+    case ST_LOOP:
+        free_parse_node(node->value.st_loop.expr);
+        program_close(node->value.st_loop.programs);
+        break;
     case ST_ASSIGN:
         free_parse_node(node->value.st_assign.expr);
         break;
