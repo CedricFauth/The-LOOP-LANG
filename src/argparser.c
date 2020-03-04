@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sysexits.h>
 
+#include "argparser.h"
 #include "util/logger.h"
 
 char** arguments;
@@ -49,6 +50,6 @@ uint32_t get_input_value(int index) {
     return 0;
 }
 
-unsigned int get_input_count() {
+uint32_t get_input_count() {
     return input_count;
 }
