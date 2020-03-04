@@ -3,6 +3,8 @@ https://en.wikipedia.org/wiki/LOOP_(programming_language)
 
 An attempt to build an interpreter for the theoretical LOOP language.
 
+Installing and using: [CLICK HERE](INSTALL.md)
+
 ### Default grammar of loop:
 ```
 P := Xi := Xj + c
