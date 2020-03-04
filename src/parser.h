@@ -42,7 +42,7 @@ typedef struct ex_bin_t {
     parse_node_t *right;
 } ex_bin_t;
 
-typedef struct ex_primary_t {
+typedef struct ex_number_t {
 
     token_t type;
     
@@ -71,6 +71,9 @@ struct parse_node_t {
 };
 
 void print_ast(program_array_t *prog);
+parse_node_t *program_get(program_array_t *prog, unsigned int i);
+
+void print_ast_rec(parse_node_t *node);
 
 program_array_t *parse(token_list_t *list);
 void close_parser(program_array_t *prog);

@@ -7,6 +7,7 @@
 #include "lexer.h"
 #include "parser.h"
 #include "environment.h"
+#include "interpreter.h"
 
 #define DEBUG
 //#undef DEBUG
@@ -62,6 +63,8 @@ int main(int argc, char* argv[]) {
     printf("f43: %u\n",environment_get(env, "F43"));
     print_environment(env);
     close_environment(env);*/
+
+    interpret(ast);
 
     close_lexer(token_list);
     close_parser(ast);

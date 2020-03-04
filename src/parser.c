@@ -47,7 +47,7 @@ parse_node_t *program_get(program_array_t *prog, unsigned int i) {
     if(i < prog->pos) {
         return prog->nodes[i];
     }
-    log_err("program_get failed: i too large");
+    //log_err("program_get failed: i too large");
     return NULL;
 }
 
