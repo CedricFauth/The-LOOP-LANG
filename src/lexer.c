@@ -77,6 +77,7 @@ char current() {
 }
 
 char next() {
+    if(content[current_char] == '\0') return '\0';
     return content[++current_char];
 }
 
