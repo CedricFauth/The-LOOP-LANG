@@ -3,8 +3,8 @@ CFLAGS = -Wall -pedantic -std=c99 #-O03
 
 all: clean1 loop clean2
 
-loop: logger.o loop.o argparser.o token.o lexer.o parser.o
-	$(CC) $(CFLAGS) -o loop loop.o logger.o argparser.o token.o lexer.o parser.o -lm
+loop: logger.o loop.o argparser.o token.o lexer.o parser.o environment.o
+	$(CC) $(CFLAGS) -o loop loop.o logger.o argparser.o token.o lexer.o parser.o environment.o -lm
 
 argparser.o: src/argparser.c
 	$(CC) $(CFLAGS) -c src/argparser.c
@@ -23,6 +23,9 @@ lexer.o: src/lexer.c
 
 parser.o: src/parser.c
 	$(CC) $(CFLAGS) -c src/parser.c
+
+environment.o: src/environment.c
+	$(CC) $(CFLAGS) -c src/environment.c
 
 clean: clean1
 

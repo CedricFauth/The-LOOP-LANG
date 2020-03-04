@@ -68,10 +68,10 @@ void print_token_list(token_list_t *list) {
         return;
     }
 
-    printf("{\n");
+    printf("tok {\n");
     if(list->head != NULL) {
         for(token_node_t *node = list->head; node != NULL; node = node->next) {
-            printf("l=%u\t", node->line);
+            printf("\tl=%u\t", node->line);
             switch (node->type) {
             case LOOP:
                 printf("[LOOP] ");

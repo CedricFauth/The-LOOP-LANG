@@ -23,6 +23,6 @@ environment_t *create_environment();
 void print_environment(environment_t *env);
 void environment_add(environment_t *env, char *name, u_int32_t val);
 u_int32_t environment_get(environment_t *env, char *name);
-void close_environment(environment_t env);
+void close_environment(environment_t *env);
 
 #endif
