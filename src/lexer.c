@@ -210,6 +210,12 @@ int get_tokens(token_list_t *list) {
                     return 1;
                 }
                 break;
+            case '/':
+                if(next() == '/'){
+                    log_info("comment detected\n");
+                    for(char t = next(); t != '\n' && t != '\0'; t = next());
+                }
+                break;
             case '\0':
                 if(statements != 0) {
                     log_err("not all opened statements are closed.\n");

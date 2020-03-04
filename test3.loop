@@ -1,4 +1,31 @@
-LOOP X5 DO
-    X2 := 3;
-    X3 := X1 -2
-END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LOOP X1 DO
+    LOOP X1 DO
+        X3 := X3 + 1
+    END
+END;
+X0 := X3

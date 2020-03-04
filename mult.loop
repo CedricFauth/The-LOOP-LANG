@@ -1,3 +1,6 @@
+
+// X1 * X2
+
 LOOP X1 DO
   X0 := X0 + X2
 END

@@ -10,7 +10,7 @@
 #include "interpreter.h"
 
 #define DEBUG
-//#undef DEBUG
+#undef DEBUG
 
 int main(int argc, char* argv[]) {
 
@@ -44,25 +44,7 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG
     print_ast(ast);
 #endif
-    
-    /*log_warn("testing env\n");
-    environment_t *env = create_environment();
-    print_environment(env);
-    printf("get: %u\n",environment_get(env, "X1"));
-    environment_add(env, "X1", 120U);
-    printf("get: %u\n",environment_get(env, "X1"));
-    environment_add(env, "ASD", 4);
-    environment_add(env, "E34", 674355);
-    environment_add(env, "E", 34);
-    environment_add(env, "F45123", 123);
-    printf("asd: %u\n",environment_get(env, "ASD"));
-    printf("f43: %u\n",environment_get(env, "F43"));
-    printf("e34: %u\n",environment_get(env, "E34"));
-    printf("e: %u\n",environment_get(env, "E"));
-    environment_add(env, "F43", 987654321);
-    printf("f43: %u\n",environment_get(env, "F43"));
-    print_environment(env);
-    close_environment(env);*/
+    log_info("interpreting...\n");
 
     interpret(ast);
 
