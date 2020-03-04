@@ -6,7 +6,7 @@
 static environment_t *env;
 
 void execute_statement(parse_node_t *stmt);
-u_int32_t execute_expression();
+uint32_t execute_expression();
 
 void interpret(program_array_t *ast){
 
@@ -52,10 +52,10 @@ void execute_statement(parse_node_t *stmt){
 
 }
 
-u_int32_t execute_expression(parse_node_t *expr){
+uint32_t execute_expression(parse_node_t *expr){
 
-    u_int32_t v1;
-    u_int32_t v2;
+    uint32_t v1;
+    uint32_t v2;
 
     switch (expr->type)
     {

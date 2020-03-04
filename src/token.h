@@ -27,9 +27,9 @@ typedef struct token_node_t {
 
     union {
         // when type is number: 32 bit value
-        u_int32_t number;
+        uint32_t number;
         // when type is var: 8bit char + 8bit number: A0, A12, X4
-        u_int8_t name[4];
+        uint8_t name[4];
     } value;
 
 } token_node_t;
@@ -42,7 +42,7 @@ typedef struct token_list_t {
 } token_list_t;
 
 
-void token_list_append(token_list_t *list, token_t type, u_int32_t value, 
+void token_list_append(token_list_t *list, token_t type, uint32_t value, 
                         char *name, int len, unsigned int line);
 token_list_t* new_token_list();
 void free_token_list(token_list_t *list);

@@ -7,7 +7,7 @@ void argparse(int argc, char* argv[]);
 
 char* get_filename();
 
-u_int32_t get_input_value(unsigned int index);
+uint32_t get_input_value(unsigned int index);
 
 unsigned int get_input_count();
 

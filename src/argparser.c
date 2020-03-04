@@ -38,7 +38,7 @@ char* get_filename() {
     return arguments[1];
 }
 
-u_int32_t get_input_value(int index) {
+uint32_t get_input_value(int index) {
     int c = 0;
     for(int i = 4; i < input_length; i++) {
         if(c == index) {

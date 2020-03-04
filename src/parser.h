@@ -48,7 +48,7 @@ typedef struct ex_number_t {
     
     union{
         char var[4];
-        u_int32_t number;
+        uint32_t number;
     } value;
 
 } ex_number_t;

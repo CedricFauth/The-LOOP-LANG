@@ -16,7 +16,7 @@ environment_t *create_environment(){
     return list;
 }
 
-void environment_add(environment_t *env, char *name, u_int32_t val){
+void environment_add(environment_t *env, char *name, uint32_t val){
     if(!env){
         log_err("environment is null\n");
         return;
@@ -42,7 +42,7 @@ void environment_add(environment_t *env, char *name, u_int32_t val){
     env->head = node;
 }
 
-u_int32_t environment_get(environment_t *env, char *name){
+uint32_t environment_get(environment_t *env, char *name){
     if(!env){
         log_err("environment is null\n");
         return 0;

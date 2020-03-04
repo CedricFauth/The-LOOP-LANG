@@ -24,7 +24,7 @@ void add_name_token(token_list_t *list, char *name, int len) {
     token_list_append(list, VARNAME, 0, name, len, line);
 }
 
-void add_value_token(token_list_t *list, u_int32_t value) {
+void add_value_token(token_list_t *list, uint32_t value) {
     token_list_append(list, NUMBER, value, 0, 0, line);
 }
 

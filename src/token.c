@@ -4,7 +4,7 @@
 #include "util/logger.h"
 #include "token.h"
 
-token_node_t *new_token(token_t type, u_int32_t value, char *name, int len, unsigned int line) {
+token_node_t *new_token(token_t type, uint32_t value, char *name, int len, unsigned int line) {
 
     token_node_t *token = malloc(sizeof(token_node_t));
     if(token == NULL) {
@@ -42,7 +42,7 @@ token_list_t* new_token_list() {
     return list;
 }
 
-void token_list_append(token_list_t *list, token_t type, u_int32_t value, char *name, int len, unsigned int line) {
+void token_list_append(token_list_t *list, token_t type, uint32_t value, char *name, int len, unsigned int line) {
 
     if(!list) {
         log_err("List is NULL\n");
