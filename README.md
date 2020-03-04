@@ -4,7 +4,6 @@ https://en.wikipedia.org/wiki/LOOP_(programming_language)
 An attempt to build an interpreter for the theoretical LOOP language.
 
 ### Default grammar of loop:
-
 ```
 P := Xi := Xj + c
    | Xi := Xj - c
@@ -17,16 +16,20 @@ P := Xi := Xj + c
 ### Features of the interpreter:
 The interpreter has some features which may simplify programs:
  - Arbitrary long expressions when assigning variables like: X4 := X3 - 2 + A42 + 123 + 314159
- - The interpreter supports variable names starting with a capital letter followed by 1 to 2 digits e.g.: X12, A2, G34, ...
- - Not allowed are names like: X, R342, HE, %§&,  ...
- - as in the original language, programs need to be seperated by a semicolon
- - all variables are initialized to 0 by default
- - output variable is always X0
- - values of input variables (starting with X1, X2, ...) need to be specified by the input parameter: -in=VALUE1,VALUE2,...
+ - The interpreter supports variable names starting with a capital letter followed by 1 to 2 digits, e.g.: X12, A2, G34, ...
+   - Not allowed are names like: X, R342, HE, %§&,  ...
+ - As in the original language, programs need to be separated by a semicolon
+ - Variables are initialized to 0 by default
+ - Output variable is always X0
+ - Values of input variables (starting with X1, X2, ...) need to be specified by the input parameter: -in=VALUE1,VALUE2,...
  - LOOP statements can handle expressions as condition like: LOOP 4 + X1 DO ...
 
+ ### Upcoming features:
+ - Custom definition of new keywords and reuse of programs
+ - Library support
+ - Debugging mode where a program is interpreted step-by-step
 
-### Internal grammar of this interpreter
+### Internal grammar of this interpreter:
 ```
 program   -> statement ( ";" statement )* ;
 
