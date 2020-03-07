@@ -1,7 +1,7 @@
 # The-LOOP-LANG
 https://en.wikipedia.org/wiki/LOOP_(programming_language)
 
-### Installing and using: [CLICK HERE](INSTALL.md)
+### Installing and usage: [CLICK HERE](INSTALL.md)
 
 An attempt to build an interpreter for the theoretical LOOP language.
 
