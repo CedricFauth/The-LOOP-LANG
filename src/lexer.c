@@ -33,6 +33,7 @@ SOFTWARE.
 #include "token.h"
 #include "util/logger.h"
 #include "argparser.h"
+//#include "predecoder/predecoder.h"
 
 #define BOLD "\033[1m"
 #define ORANGE "\033[33m\033[1m"
