@@ -36,7 +36,7 @@ SOFTWARE.
 #include "interpreter.h"
 
 #define DEBUG
-#undef DEBUG
+//#undef DEBUG
 
 int main(int argc, char* argv[]) {
 

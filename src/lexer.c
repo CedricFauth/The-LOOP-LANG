@@ -29,11 +29,12 @@ SOFTWARE.
 #include <math.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "token.h"
 #include "util/logger.h"
 #include "argparser.h"
-//#include "predecoder/predecoder.h"
+#include "predecoder/predecoder.h"
 
 #define BOLD "\033[1m"
 #define ORANGE "\033[33m\033[1m"
@@ -124,6 +125,31 @@ void skip(unsigned int n) {
     current_char += n;
 }
 
+char *get_importname(){
+
+    char c = next();
+    while(c == '\t' || c == ' ') c = next();
+    if(c != '"') return NULL;
+    c = next();
+    unsigned int start = current_char;
+    while(is_char((char)toupper(c)) || c == '.' || c == '/') c = next();
+    if(c == '"'){
+        unsigned int stop = current_char;
+        char *ptr = malloc(sizeof(char) * (stop - start) + 1);
+        strncpy(ptr, content+start, stop-start);
+        ptr[stop-start] = '\0';
+        skip(1);
+        return ptr;
+    }
+    return NULL;
+
+}
+
+void free_importname(char* ptr){
+    if(!ptr) return;
+    free(ptr);
+}
+
 bool matches(char* comp) {
     int n = strlen(comp);
     if(strncmp(content+current_char+1, comp, n) == 0) {
@@ -173,6 +199,16 @@ int word(token_list_t *list) {
                 add_custom_token(list, DO);
             }
             break;
+        case 'I':
+            if(matches("MPORT")){
+                if(statements) return 1;
+                char *file = get_importname();
+                if(import_definitions(list, file)){
+                    free_importname(file);
+                    return 1;
+                }
+                free_importname(file);
+            } else return 1;
         case 'E':
             if(matches("ND")) {
                 add_custom_token(list, END);

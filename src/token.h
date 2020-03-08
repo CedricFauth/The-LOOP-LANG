@@ -42,7 +42,10 @@ typedef enum token_t {
     NUMBER, VARNAME,
 
     // other tokens
-    SEMICOLON, ENDOFFILE
+    SEMICOLON, ENDOFFILE,
+
+    // tokens for own definitions
+    NEW_DEF, CALL_DEF
 
 } token_t;
 
@@ -53,6 +56,8 @@ typedef struct token_node_t {
     struct token_node_t* next;
 
     union {
+        // call id for new_def and call_def tokens
+        uint32_t id;
         // when type is number: 32 bit value
         uint32_t number;
         // when type is var: 8bit char + 8bit number: A0, A12, X4
