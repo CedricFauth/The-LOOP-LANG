@@ -30,6 +30,10 @@ SOFTWARE.
 
 #include <stdint.h>
 
+/**
+ * All tokens that the lexer uses
+ * to generate token lists
+ */
 typedef enum token_t {
 
     // keywords
@@ -49,6 +53,10 @@ typedef enum token_t {
 
 } token_t;
 
+/**
+ * Token Node is a struct that
+ * is used as a list element
+ */
 typedef struct token_node_t {
 
     token_t type;
@@ -66,6 +74,10 @@ typedef struct token_node_t {
 
 } token_node_t;
 
+/**
+ * Token list is a list that 
+ * stores all tokens as token nodes
+ */
 typedef struct token_list_t {
 
     token_node_t *head;
@@ -73,13 +85,53 @@ typedef struct token_list_t {
 
 } token_list_t;
 
+// methods
 
+/**
+ * creates a new token list
+ * @return new tokenlist or null if allocation fails
+ */
+token_list_t* new_token_list();
+
+/**
+ * frees all resources related to the token list
+ */
+void free_token_list(token_list_t *list);
+
+/**
+ * appends adds a new node to a token list
+ * @param list is the list where the new token is added to
+ * @param type is the token type
+ * 
+ * @param value number (value of token)
+ * or
+ * @param name pointer to a 4 byte char array (incl. null)
+ * @param len length of name array
+ * 
+ * @param line number of line
+ */
 void token_list_append(token_list_t *list, token_t type, uint32_t value, 
                         char *name, int len, unsigned int line);
-token_list_t* new_token_list();
-void free_token_list(token_list_t *list);
+
+/**
+ * calculates the size of the list
+ * @param list
+ * @return number of elements in the list
+ */
 int size(token_list_t *list);
+
+/**
+ * gets a token node from a list
+ * @param list
+ * @param index index of the element
+ * @return requested token node or null
+ */
 token_node_t *get_token(token_list_t *list, int index);
+
+/**
+ * prints the content of the token list
+ * @param list
+ */
 void print_token_list(token_list_t *list);
 
 #endif

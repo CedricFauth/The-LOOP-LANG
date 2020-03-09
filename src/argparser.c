@@ -32,10 +32,17 @@ SOFTWARE.
 #include "argparser.h"
 #include "util/logger.h"
 
-char** arguments;
-unsigned int input_count = 0;
-unsigned int input_length = 0;
+// stores argument array
+static char** arguments;
+static unsigned int input_count = 0;
+static unsigned int input_length = 0;
 
+/**
+ * setup function
+ * other methods of argparser only work if argparse() ist called before
+ * @param argc number of command line arguments
+ * @param argv points to command line inputs
+ */
 void argparse(int argc, char* argv[]) {
 
     if(argc != 3) {
@@ -50,10 +57,11 @@ void argparse(int argc, char* argv[]) {
         exit(EX_USAGE);
     }
 
+    // strlen of -in=... variable
     input_length = strlen(arguments[2]);
     input_count++;
     for(int i = 4; i < input_length; i++) {
-
+        // 'cutting' string at ',' and replacing with '\0'
         if(arguments[2][i] == ',') {
             arguments[2][i] = '\0';
             input_count++;
@@ -61,21 +69,37 @@ void argparse(int argc, char* argv[]) {
     }
 }
 
+/**
+ * getter for filename of *.loop source file
+ * @return returns pointer to filename
+ */
 char* get_filename() {
     return arguments[1];
 }
 
+/**
+ * getter for input values
+ * @param index
+ * @return value of -in=...,... argument at index  
+ */
 uint32_t get_input_value(int index) {
     int c = 0;
+    // searches for string at index
     for(int i = 4; i < input_length; i++) {
         if(c == index) {
+            // returns integer value from string
             return atoi(arguments[2]+i);
         }
+        // next word
         if(arguments[2][i] == '\0') c++;
     }
     return 0;
 }
 
+/**
+ * getter for number of inputs
+ * @return number of input values
+ */
 uint32_t get_input_count() {
     return input_count;
 }

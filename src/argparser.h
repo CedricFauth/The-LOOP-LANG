@@ -24,17 +24,40 @@ SOFTWARE.
 
 */
 
+/**
+ * argparser is used to handle command line argument parsing
+ */
+
 #ifndef ARGPARSER_H
 #define ARGPARSER_H
 
 #include <stdint.h>
 
+/**
+ * setup function
+ * other methods of argparser only work if argparse() ist called before
+ * @param argc number of command line arguments
+ * @param argv points to command line inputs
+ */
 void argparse(int argc, char* argv[]);
 
+/**
+ * getter for filename of *.loop source file
+ * @return returns pointer to filename
+ */
 char* get_filename();
 
+/**
+ * getter for input values
+ * @param index
+ * @return value of -in=...,... argument at index  
+ */
 uint32_t get_input_value(int index);
 
+/**
+ * getter for number of inputs
+ * @return number of input values
+ */
 uint32_t get_input_count();
 
 #endif
