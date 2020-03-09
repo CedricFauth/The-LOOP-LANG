@@ -36,7 +36,7 @@ SOFTWARE.
 #include "interpreter.h"
 
 #define DEBUG
-//#undef DEBUG      // uncomment for release mode
+#undef DEBUG      // uncomment for release mode
 
 /*
 Note: 
