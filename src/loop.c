@@ -36,47 +36,72 @@ SOFTWARE.
 #include "interpreter.h"
 
 #define DEBUG
-//#undef DEBUG
+//#undef DEBUG      // uncomment for release mode
 
+/*
+Note: 
+Instead of printf for logging I use my own logger as described in 'logger.h'
+*/
+
+/**
+ * main function of loop interpreter
+ *
+ * @param argc number of command line args
+ * @param argv array of command line words
+ * 
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
 int main(int argc, char* argv[]) {
 
-#ifdef DEBUG
-    set_log_level(INFO);
-#else
-    set_log_level(ERROR);
-#endif
+    // sets log level depending on DEBUG state
+    #ifdef DEBUG
+        set_log_level(INFO);
+    #else
+        set_log_level(ERROR);
+    #endif
 
+    // initialize lexer (opens source code file)
     token_list_t *token_list = open_lexer(argc, argv);
 
     log_info("getting statement tokens\n");
+
+    // get list of tokens
     if(get_tokens(token_list) != 0) {
+        // error handling
         close_lexer(token_list);
         exit(EXIT_FAILURE);
     }
 
-#ifdef DEBUG
-    print_token_list(token_list);
-#endif
+    #ifdef DEBUG
+        // prints all tokens from the list
+        print_token_list(token_list);
+    #endif
 
     log_info("generating AST\n");
     program_array_t *ast;
+    // reads token list and generates AbstractSyntaxTree
     if((ast = parse(token_list)) == NULL) {
+        // error handling
         close_lexer(token_list);
         close_parser(ast);
         exit(EXIT_FAILURE);
     }
 
     log_info("printing ast...\n");
-#ifdef DEBUG
-    print_ast(ast);
-#endif
+    #ifdef DEBUG
+        // prints ast for debugging purpose
+        print_ast(ast);
+    #endif
     log_info("interpreting...\n");
 
+    // calls interpreter which executes/interprets the AST
     interpret(ast);
 
+    // close/free all ressources
     close_lexer(token_list);
     close_parser(ast);
 
+    // normal exit
     exit(EXIT_SUCCESS);
 
 }

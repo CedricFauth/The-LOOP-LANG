@@ -27,6 +27,9 @@ SOFTWARE.
 #ifndef LOGGER_H
 #define LOGGER_H
 
+/*
+Custom mini logger tool with console output
+*/
 
 typedef enum LogLevel {
 
@@ -34,6 +37,12 @@ typedef enum LogLevel {
 
 } LogLevel;
 
+/*
+ *  defines which log types appear on console
+ *  INFO    -> all logs appear
+ *  WARNING -> only warnings and errors
+ *  ERROR   -> only errors
+ */
 void set_log_level(LogLevel new_level);
 
 //everything
