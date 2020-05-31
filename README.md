@@ -28,6 +28,7 @@ The interpreter has some features which may simplify programs:
  - LOOP statements can handle expressions as condition like: LOOP 4 + X1 DO ...
 
  ### Upcoming features:
+ ### ! CURRENTLY THE PROJECT IS DISCONTINUED !
  - Custom definition of new keywords and reuse of programs
  - Library support
  - Debugging mode where a program is interpreted step-by-step
