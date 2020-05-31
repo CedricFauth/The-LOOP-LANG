@@ -17,7 +17,7 @@ P := Xi := Xj + c
 ```
 
 ### Features of the interpreter:
-The interpreter has some features which may simplify programs:
+The interpreter has some additional features which may simplify writing programs:
  - Arbitrary long expressions when assigning variables like: X4 := X3 - 2 + A42 + 123 + 314159
  - The interpreter supports variable names starting with a capital letter followed by 1 to 2 digits, e.g.: X12, A2, G34, ...
    - Not allowed are names like: X, R342, HE, %§&,  ...
